@@ -1,0 +1,8 @@
+*.gem
+
+# Bundler
+bin
+vendor
+
+# Etc.
+.DS_Store
