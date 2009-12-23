@@ -26,25 +26,26 @@ Reinforcing the Rails with assorted patches.
 
 == Install
 
+These instructions are for the master branch, to be used with edge Rails. For
+Rails 2.3, try: http://github.com/stephencelis/rerails/tree/2-3-stable
+
 As a gem:
 
-  # config/environment.rb
-  config.gem "rerails", :version => '~> 2.3.5'
+  # Gemfile
+  gem "rerails", "3.0.pre", :git => "git://github.com/stephencelis/rerails.git"
 
-  % [sudo] rake gems:install
+  % gem bundle
 
 
 As a plugin:
 
-  % script/plugin install git://github.com/stephencelis/rerails.git \
-                          -r 'branch 2-3-stable'
+  % script/plugin install git://github.com/stephencelis/rerails.git
 
 
 == Development
 
 Setup (to run tests):
 
-  % [sudo] gem install bundler
   % gem bundle
   % bin/rake
 
