@@ -4,6 +4,6 @@
 
   * Add Array#first and Array#last limit functionality to
     ActiveRecord::Base.first and ActiveRecord::Base.last; optimize LIMIT SQL
-    for "first" and "last" in associations and named scopes.
+    for "first" and "last" in association collections and named scopes.
 
   * Let label helpers accept blocks.

@@ -44,9 +44,9 @@ As a plugin:
 
 Setup (to run tests):
 
-  [sudo] gem install bundler
-  gem bundle
-  bin/rake
+  % [sudo] gem install bundler
+  % gem bundle
+  % bin/rake
 
 
 == License
