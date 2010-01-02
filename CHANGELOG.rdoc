@@ -1,3 +1,11 @@
+=== HEAD
+
+* 1 major enhancement
+
+  * Add form helpers for HTML5 inputs of type search, tel, url, email, number,
+    range.
+
+
 === 2.3.5.1 / 2009-12-23
 
 * 2 major enhancements
