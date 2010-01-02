@@ -49,6 +49,8 @@ As a gem:
 
   % gem bundle
 
+  # config/initializers/rails_patches.rb
+  require "rerails" # Or require only the files you need.
 
 As a plugin:
 

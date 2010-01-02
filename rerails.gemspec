@@ -19,4 +19,8 @@ Gem::Specification.new do |s|
   s.email = "stephen@stephencelis.com"
   s.homepage = "http://github.com/stephencelis/rerails"
   s.rubyforge_project = "rerails"
+  s.post_install_message = <<DOC
+Remember to explicitly 'require "rerails"' in and initializer or \
+'after_initialize', or require only the parts you need.
+DOC
 end
