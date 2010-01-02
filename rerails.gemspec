@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
-  s.date = "2009-12-23"
+  s.date = "2010-01-02"
 
   s.platform = Gem::Platform::RUBY
   s.name = "rerails"
-  s.version = "2.3.5.1"
+  s.version = "2.3.5.2"
   s.summary = "Reinforcing the Rails"
   s.description = "Assorted patches to make Rails a bit better."
 
