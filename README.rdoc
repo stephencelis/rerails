@@ -7,11 +7,13 @@ Reinforcing the Rails with assorted patches.
 
 === ReactionView
 
-* Label tag helpers accept blocks.
+*  Label tag helpers accept blocks
+   ({Rails Lighthouse ticket}[https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/3645-let-label-helpers-accept-blocks]).
 
     <% label_tag do %>
       <%= check_box_tag "tos" %> Accept <%= link_to "Terms", "/tos" %>.
     <% end %>
+
 
 
 * HTML5 form helpers.
@@ -31,7 +33,8 @@ Reinforcing the Rails with assorted patches.
 
 * <tt>Array#first</tt> and <tt>Array#last</tt> functionality and
   optimizations for <tt>ActiveRecord::Base</tt>, association collections, and
-  named scopes.
+  named scopes
+  ({Rails Lighthouse ticket}[https://rails.lighthouseapp.com/projects/8994/tickets/3565-add-limit-functionality-to-find-first-and-last]).
 
     AngryMan.first(2) # => [#<AngryMan id: 1>, #<AngryMan id: 2>]
     AngryMan.last(2)  # => [#<AngryMan id: 11>, #<AngryMan id: 12>]
