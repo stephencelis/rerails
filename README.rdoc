@@ -16,7 +16,8 @@ Reinforcing the Rails with assorted patches.
 
 
 
-* HTML5 form helpers.
+* HTML5 form helpers
+  ({Rails Lighthouse ticket}[https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/3646-html5-form-field-helpers-email_field_tag-etc]).
 
     <% form_tag "user_search" do %>
       <%= search_field_tag "user_search", nil, :autosave => true %>
