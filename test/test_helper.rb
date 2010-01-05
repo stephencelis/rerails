@@ -1,5 +1,6 @@
 require "test/unit"
 require "action_controller"
+require "action_controller/test_case"
 require "action_view"
 require "action_view/test_case"
 require "active_record"

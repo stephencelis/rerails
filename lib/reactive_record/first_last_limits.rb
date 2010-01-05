@@ -1,73 +1,77 @@
 module ActiveRecord #:nodoc:
   class Base
     class << self
-      # A convenience wrapper for <tt>find(:first, *args)</tt>. You can pass in
-      # all the same arguments to this method as you can to
-      # <tt>find(:first)</tt>. The limit can be passed in directly as the
-      # first argument.
-      #
-      # ==== Examples
-      #
-      #   Post.first
-      #   # => #<Post id: 1, posted: false>
-      #   Post.first(2, :conditions => { :posted => true })
-      #   # => [#<Post id: 2, posted: true>, #<Post id: 3, posted: true>]
-      def first(*args)
-        options, limit = args.extract_options!, args.shift
-        find(:first, *(args << options.merge(:limit => limit || options[:limit])))
-      end
+      def find(*args)
+        options = args.extract_options!
+        set_readonly_option!(options)
 
-      # A convenience wrapper for <tt>find(:last, *args)</tt>. You can pass in
-      # all the same arguments to this method as you can to
-      # <tt>find(:last)</tt>. The limit can be passed in directly as the
-      # first argument.
-      #
-      # ==== Examples
-      #
-      #   Post.last
-      #   # => #<Post id: 50, posted: false>
-      #   Post.last(2, :conditions => { :posted => true })
-      #   # => [#<Post id: 48, posted: true>, #<Post id: 49, posted: true>]
-      def last(*args)
-        options, limit = args.extract_options!, args.shift
-        find(:last, *(args << options.merge(:limit => limit || options[:limit])))
-      end
+        relation = construct_finder_arel(options)
 
-      private
-        def find_initial(options)
-          every = find_every(options.merge(:limit => options[:limit] || 1))
-          options[:limit] ? every : every.first
+        case args.first
+        when :first, :last, :all
+          relation.send(*args)
+        else
+          relation.find(*args)
         end
+      end
+    end
+  end
 
-        def find_last_with_limit(options)
-          last = find_last_without_limit(options)
-          options[:limit] ? last.reverse : last
-        end
-        alias_method_chain :find_last, :limit
+  module FinderMethods #:nodoc:
+    def first(*n)
+      if loaded?
+        @records.first(*n)
+      elsif n.empty?
+        limit(1).to_a[0]
+      else
+        limit(*n).to_a
+      end
+    end
+
+    def last(*n)
+      if loaded?
+        @records.last(*n)
+      elsif n.empty?
+        reverse_order.limit(1).to_a[0]
+      else
+        reverse_order.limit(*n).to_a.reverse
+      end
     end
   end
 
   module Associations #:nodoc:
     class AssociationCollection < AssociationProxy
-      # Fetches the first n records (default: 1) using SQL if possible.
-      def first(*args)
-        if fetch_first_or_last_using_find?(args)
-          options, limit = args.extract_options!, args.shift
-          find(:first, *(args << options.merge(:limit => limit || options[:limit])))
-        else
-          load_target unless loaded?
-          @target.first(*args)
-        end
-      end
+      def find(*args)
+        options = args.extract_options!
 
-      # Fetches the last n records (default: 1) using SQL if possible.
-      def last(*args)
-        if fetch_first_or_last_using_find?(args)
-          options, limit = args.extract_options!, args.shift
-          find(:last, *(args << options.merge(:limit => limit || options[:limit])))
+        # If using a custom finder_sql, scan the entire collection.
+        if @reflection.options[:finder_sql]
+          expects_array = args.first.kind_of?(Array)
+          ids           = args.flatten.compact.uniq.map { |arg| arg.to_i }
+
+          if ids.size == 1
+            id = ids.first
+            record = load_target.detect { |r| id == r.id }
+            expects_array ? [ record ] : record
+          else
+            load_target.select { |r| ids.include?(r.id) }
+          end
         else
-          load_target unless loaded?
-          @target.last(*args)
+          merge_options_from_reflection!(options)
+          construct_find_options!(options)
+
+          find_scope = construct_scope[:find].slice(:conditions, :order)
+
+          with_scope(:find => find_scope) do
+            relation = @reflection.klass.send(:construct_finder_arel, options)
+
+            case args.first
+            when :first, :last, :all
+              relation.send(*args)
+            else
+              relation.find(*args)
+            end
+          end
         end
       end
 
@@ -82,7 +86,7 @@ module ActiveRecord #:nodoc:
   module NamedScope #:nodoc:
     class Scope
       def first(*args)
-        if @found
+        if @found && !args.first.kind_of?(Hash)
           proxy_found.first(*args)
         else
           super
@@ -90,7 +94,7 @@ module ActiveRecord #:nodoc:
       end
 
       def last(*args)
-        if @found
+        if @found && !args.first.kind_of?(Hash)
           proxy_found.last(*args)
         else
           super
