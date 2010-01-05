@@ -1,7 +1,6 @@
 Gem::Specification.new do |s|
   s.date = "2009-12-23"
 
-  s.platform = Gem::Platform::RUBY
   s.name = "rerails"
   s.version = "3.0.pre.1"
   s.summary = "Reinforcing the Rails"
@@ -11,7 +10,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "= 3.0.pre"
 
-  s.has_rdoc = true
   s.extra_rdoc_files = %w(CHANGELOG.rdoc README.rdoc)
   s.rdoc_options = %w(--main README.rdoc)
 

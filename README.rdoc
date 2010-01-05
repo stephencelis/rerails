@@ -71,7 +71,7 @@ Setup (to run tests):
 
 == License
 
-Released under the same license as Ruby on Rails (The MIT License).
+Released under the same license as Ruby on Rails (the MIT License).
 
 (c) 2009-2010 Stephen Celis, stephen@stephencelis.com.
 
