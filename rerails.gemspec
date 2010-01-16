@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
-  s.date = "2010-01-02"
+  s.date = "2010-01-15"
 
   s.platform = Gem::Platform::RUBY
   s.name = "rerails"
-  s.version = "2.3.5.2"
+  s.version = "2.3.5.3"
   s.summary = "Reinforcing the Rails"
   s.description = "Assorted patches to make Rails a bit better."
 
@@ -18,5 +18,4 @@ Gem::Specification.new do |s|
   s.author = "Stephen Celis"
   s.email = "stephen@stephencelis.com"
   s.homepage = "http://github.com/stephencelis/rerails"
-  s.rubyforge_project = "rerails"
 end
