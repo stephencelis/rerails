@@ -3,9 +3,8 @@ module ActiveRecord #:nodoc:
     class << self
       def find(*args)
         options = args.extract_options!
-        set_readonly_option!(options)
 
-        relation = construct_finder_arel(options)
+        relation = construct_finder_arel(options, current_scoped_methods)
 
         case args.first
         when :first, :last, :all
