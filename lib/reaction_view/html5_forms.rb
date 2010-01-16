@@ -135,7 +135,7 @@ module ActionView #:nodoc:
 
       def range_field(object_name, method, options = {})
         options = options.stringify_keys
-        options["type"] ||= "number"
+        options["type"] ||= "range"
         if range = options.delete("in") || options.delete("within")
           options.update("min" => range.min, "max" => range.max)
         end
