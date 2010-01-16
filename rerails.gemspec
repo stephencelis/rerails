@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.date = "2009-12-23"
+  s.date = "2010-01-15"
 
   s.name = "rerails"
   s.version = "3.0.pre.1"
@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.author = "Stephen Celis"
   s.email = "stephen@stephencelis.com"
   s.homepage = "http://github.com/stephencelis/rerails"
-  s.rubyforge_project = "rerails"
   s.post_install_message = <<DOC
 Remember to explicitly 'require "rerails"' in and initializer or \
 'after_initialize', or require only the parts you need.

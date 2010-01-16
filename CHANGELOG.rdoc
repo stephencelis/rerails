@@ -1,5 +1,14 @@
 === HEAD
 
+=== 2.3.5.3 / 2010-01-15
+
+* 1 bugfix
+
+  * Form helper range field should be of type range.
+
+
+=== 2.3.5.2 / 2010-01-02
+
 * 1 major enhancement
 
   * Add form helpers for HTML5 inputs of type search, tel, url, email, number,
