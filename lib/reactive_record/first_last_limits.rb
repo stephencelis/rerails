@@ -1,41 +1,43 @@
 module ActiveRecord #:nodoc:
-  class Base
-    class << self
-      def find(*args)
-        options = args.extract_options!
+  module FinderMethods #:nodoc:
+    def first(*args)
+      options = args.extract_options!
+      if options.any?
+        apply_finder_options(options).first(*args)
+      else
+        find_first(*args)
+      end
+    end
 
-        relation = construct_finder_arel(options, current_scoped_methods)
+    def last(*args)
+      options = args.extract_options!
+      if options.any?
+        apply_finder_options(options).last(*args)
+      else
+        find_last(*args)
+      end
+    end
 
-        case args.first
-        when :first, :last, :all
-          relation.send(*args)
+    private
+      def find_first(n = nil)
+        if loaded?
+          @records.first(n)
+        elsif n.nil?
+          @first ||= limit(1).to_a[0]
         else
-          relation.find(*args)
+          limit(n).to_a
         end
       end
-    end
-  end
 
-  module FinderMethods #:nodoc:
-    def first(*n)
-      if loaded?
-        @records.first(*n)
-      elsif n.empty?
-        limit(1).to_a[0]
-      else
-        limit(*n).to_a
+      def find_last(n = nil)
+        if loaded?
+          @records.first(n)
+        elsif n.nil?
+          @last ||= reverse_order.limit(1).to_a[0]
+        else
+          reverse_order.limit(n).to_a.reverse
+        end
       end
-    end
-
-    def last(*n)
-      if loaded?
-        @records.last(*n)
-      elsif n.empty?
-        reverse_order.limit(1).to_a[0]
-      else
-        reverse_order.limit(*n).to_a.reverse
-      end
-    end
   end
 
   module Associations #:nodoc:
@@ -62,11 +64,14 @@ module ActiveRecord #:nodoc:
           find_scope = construct_scope[:find].slice(:conditions, :order)
 
           with_scope(:find => find_scope) do
-            relation = @reflection.klass.send(:construct_finder_arel, options)
+            relation = @reflection.klass.send(:construct_finder_arel, options, @reflection.klass.send(:current_scoped_methods))
 
             case args.first
-            when :first, :last, :all
+            when :first, :last
               relation.send(*args)
+            when :all
+              records = relation.all
+              @reflection.options[:uniq] ? uniq(records) : records
             else
               relation.find(*args)
             end
@@ -74,9 +79,27 @@ module ActiveRecord #:nodoc:
         end
       end
 
+      def first(*args)
+        if fetch_first_or_last_using_find?(args)
+          find(:first, *args)
+        else
+          load_target unless loaded?
+          @target.first(*args)
+        end
+      end
+
+      def last(*args)
+        if fetch_first_or_last_using_find?(args)
+          find(:last, *args)
+        else
+          load_target unless loaded?
+          @target.last(*args)
+        end
+      end
+
       private
         def fetch_first_or_last_using_find?(args)
-          !(loaded? || @owner.new_record? || @reflection.options[:finder_sql]) ||
+          args.first.kind_of?(Hash) || !(loaded? || @owner.new_record? || @reflection.options[:finder_sql]) ||
             @target.any? { |record| record.new_record? }
         end
     end
@@ -85,18 +108,28 @@ module ActiveRecord #:nodoc:
   module NamedScope #:nodoc:
     class Scope
       def first(*args)
-        if @found && !args.first.kind_of?(Hash)
-          proxy_found.first(*args)
+        if loaded? && !args.first.kind_of?(Hash)
+          to_a.first(*args)
         else
-          super
+          options = args.extract_options!
+          if options.any?
+            apply_finder_options(options).first(*args)
+          else
+            super
+          end
         end
       end
 
       def last(*args)
-        if @found && !args.first.kind_of?(Hash)
-          proxy_found.last(*args)
+        if loaded? && !args.first.kind_of?(Hash)
+          to_a.last(*args)
         else
-          super
+          options = args.extract_options!
+          if options.any?
+            apply_finder_options(options).last(*args)
+          else
+            super
+          end
         end
       end
     end
