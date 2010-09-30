@@ -1,9 +1,3 @@
-begin
-  require "vendor/gems/environment.rb"
-rescue LoadError
-  warn "Run `gem bundle --only=test`."
-end
-
 require "rake/testtask"
 
 task :default => :test

@@ -1,8 +1,7 @@
 *.gem
 
 # Bundler
-bin
-vendor
+.bundle
 
 # Etc.
 .DS_Store

@@ -5,31 +5,6 @@ Reinforcing the Rails with assorted patches.
 
 == Features
 
-=== ReactionView
-
-*  Label tag helpers accept blocks
-   ({Rails Lighthouse ticket}[https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/3645-let-label-helpers-accept-blocks]).
-
-    <% label_tag do %>
-      <%= check_box_tag "tos" %> Accept <%= link_to "Terms", "/tos" %>.
-    <% end %>
-
-
-
-* HTML5 form helpers
-  ({Rails Lighthouse ticket}[https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/3646-html5-form-field-helpers-email_field_tag-etc]).
-
-    <% form_tag "user_search" do %>
-      <%= search_field_tag "q", nil, :autosave => true %>
-    <% end %>
-
-    <% form_for @user do |f| %>
-      <%= f.email_field :email %>
-      <%= f.url_field :homepage %>
-      <%= f.phone_field :phone %>
-    <% end %>
-
-
 === ReactiveRecord
 
 * <tt>Array#first</tt> and <tt>Array#last</tt> functionality and
@@ -49,12 +24,10 @@ Rails 2.3, try: http://github.com/stephencelis/rerails/tree/2-3-stable
 As a gem:
 
   # Gemfile
-  gem "rerails", "3.0.pre", :git => "git://github.com/stephencelis/rerails.git"
+  gem "rerails", "3.0.0"
 
-  % gem bundle
+  % bundle
 
-  # config/initializers/rails_patches.rb
-  require "rerails" # Or require only the files you need.
 
 As a plugin:
 
@@ -65,8 +38,7 @@ As a plugin:
 
 Setup (to run tests):
 
-  % gem bundle
-  % bin/rake
+  % bundle && rake
 
 
 == License
